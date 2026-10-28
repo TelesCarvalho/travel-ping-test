@@ -30,7 +30,7 @@ def verificar_sesc():
         Select(driver.find_element(By.XPATH, "//select[contains(@name, 'unidade')]")).select_by_visible_text("Caldas Novas")
         campo_data = driver.find_element(By.XPATH, "//input[contains(@class, 'daterange')]")
         campo_data.clear()
-        campo_data.send_keys("31/12/2026 - 03/01/2027")
+        campo_data.send_keys("07/01/2027 - 08/01/2027")
 
         # 2. Configurar os 2 Adultos
         driver.find_element(By.XPATH, "//button[contains(text(), 'Selecione')]").click()
@@ -49,7 +49,7 @@ def verificar_sesc():
         # 4. Análise do Resultado
         pagina = driver.find_element(By.TAG_NAME, "body").text.lower()
         if "esgotado" not in pagina and "não há disponibilidade" not in pagina:
-            notificar_guilherme("🚨 VAGA ENCONTRADA NO SESC CALDAS NOVAS!\n📅 31/12/26 a 03/01/27\n🛏️ 1 Quarto p/ 2 Adultos (Pensão Completa)\n🏃‍♂️ Corra para o site e reserve!")
+            notificar_guilherme("🚨 VAGA ENCONTRADA NO SESC CALDAS NOVAS!\n📅 07/01/27 a 08/01/27\n🛏️ 1 Quarto p/ 2 Adultos (Pensão Completa)\n🏃‍♂️ Corra para o site e reserve!")
         else:
             print("Sem vagas no momento. O robô continuará vigiando.")
 
