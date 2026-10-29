@@ -1,4 +1,4 @@
-name: Robô Vigia Sesc
+name: Travel Ping Test
 
 on:
   schedule:
