@@ -34,7 +34,7 @@ def verificar_sesc():
         # 2. Período (usando o name fornecido: datas)
         campo_data = driver.find_element(By.NAME, "datas")
         campo_data.clear()
-        campo_data.send_keys("31/12/2026 - 03/01/2027")
+        campo_data.send_keys("07/01/2027 - 08/01/2027")
         time.sleep(2)
 
         # 3. Adultos (usando o name fornecido: adultos)
@@ -60,7 +60,7 @@ def verificar_sesc():
         if "não existe disponibilidade" in pagina:
             print("Sem vagas no momento. O robô continuará vigiando.")
         else:
-            notificar_guilherme("🚨 VAGA ENCONTRADA NO SESC CALDAS NOVAS!\n📅 31/12/26 a 03/01/27\n🛏️ 1 Quarto p/ 2 Adultos (Pensão Completa)\n🏃‍♂️ Corra para o site e reserve!")
+            notificar_guilherme("🚨 VAGA ENCONTRADA!\n📅 07/01/27 a 08/01/27\n🛏️ 1 Quarto p/ 2 Adultos \n🏃‍♂️ Corra para o site e reserve!")
             print("Mensagem enviada com sucesso!")
 
     except Exception as e:
