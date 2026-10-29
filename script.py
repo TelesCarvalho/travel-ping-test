@@ -25,46 +25,35 @@ def verificar_sesc():
 
     try:
         driver.get("https://portalturismo.sescgo.com.br/")
-        time.sleep(8) # Aguarda o carregamento inicial
+        time.sleep(8) 
 
-        # 1. Unidade e Datas
-        unidade = driver.find_element(By.XPATH, "//select[contains(@name, 'unidade') or contains(@name, 'Unidade')]")
+        # 1. Unidade (usando o ID fornecido: search-unidade)
+        unidade = driver.find_element(By.ID, "search-unidade")
         Select(unidade).select_by_visible_text("Caldas Novas")
         
-        campo_data = driver.find_element(By.XPATH, "//input[@type='text']")
+        # 2. Período (usando o name fornecido: datas)
+        campo_data = driver.find_element(By.NAME, "datas")
         campo_data.clear()
         campo_data.send_keys("07/01/2027 - 08/01/2027")
         time.sleep(2)
 
-        # 2. Configurar os 2 Adultos (Com clique forçado via JS)
-        botoes_selecione = driver.find_elements(By.XPATH, "//*[contains(text(), 'Selecione') or contains(@title, 'Selecione')]")
-        for btn in botoes_selecione:
-            try:
-                driver.execute_script("arguments[0].click();", btn)
-                time.sleep(2) # Pausa para a janela modal abrir
-                break # Se conseguiu clicar, sai do loop e avança
-            except:
-                continue
-
-        # Seleciona os dependentes nos menus suspensos da janela modal
-        Select(driver.find_element(By.XPATH, "(//select[contains(@class, 'form-select')])[1]")).select_by_visible_text("Dependente do Trabalhador do Comércio")
-        Select(driver.find_element(By.XPATH, "(//select[contains(@class, 'form-select')])[2]")).select_by_visible_text("Dependente do Trabalhador do Comércio")
-        
-        # Clica no botão SALVAR da janela de adultos forçando via JS
-        btn_salvar = driver.find_element(By.XPATH, "//*[contains(text(), 'SALVAR') or contains(text(), 'Salvar')]")
-        driver.execute_script("arguments[0].click();", btn_salvar)
+        # 3. Adultos (usando o name fornecido: adultos)
+        adultos = driver.find_element(By.NAME, "adultos")
+        Select(adultos).select_by_value("2")
         time.sleep(2)
 
-        # 3. Pensão e Busca
-        Select(driver.find_element(By.XPATH, "//select[contains(text(), 'regime') or contains(@name, 'regime')]")).select_by_visible_text("Pensão Completa")
-        
+        # 4. Regime de Pensão (usando o ID fornecido: regime-pensao)
+        pensao = driver.find_element(By.ID, "regime-pensao")
+        Select(pensao).select_by_visible_text("Pensão Completa")
+        time.sleep(2)
+
         # Clica no botão BUSCAR forçando via JS
         btn_buscar = driver.find_element(By.XPATH, "//*[contains(text(), 'BUSCAR') or contains(text(), 'Buscar')]")
         driver.execute_script("arguments[0].click();", btn_buscar)
         
-        time.sleep(10) # Espera 10 segundos pela página de resultados (crucial na nuvem)
+        time.sleep(10) # Espera 10 segundos pela página de resultados
 
-        # 4. Análise do Resultado
+        # 5. Análise do Resultado
         pagina = driver.find_element(By.TAG_NAME, "body").text.lower()
         if "esgotado" not in pagina and "não há disponibilidade" not in pagina:
             notificar_guilherme("🚨 VAGA ENCONTRADA NO SESC CALDAS NOVAS!\n📅 07/01/27 a 08/01/27\n🛏️ 1 Quarto p/ 2 Adultos (Pensão Completa)\n🏃‍♂️ Corra para o site e reserve!")
