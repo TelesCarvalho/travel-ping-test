@@ -1,9 +1,7 @@
 name: Travel Ping Test
 
 on:
-  schedule:
-    - cron: '*/30 * * * *' # Executa a cada 30 minutos
-  workflow_dispatch: # Permite rodar manualmente
+  workflow_dispatch:
 
 jobs:
   buscar:
