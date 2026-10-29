@@ -34,7 +34,7 @@ def verificar_sesc():
         # 2. Período (usando o name fornecido: datas)
         campo_data = driver.find_element(By.NAME, "datas")
         campo_data.clear()
-        campo_data.send_keys("07/01/2027 - 08/01/2027")
+        campo_data.send_keys("31/12/2026 - 03/01/2027")
         time.sleep(2)
 
         # 3. Adultos (usando o name fornecido: adultos)
