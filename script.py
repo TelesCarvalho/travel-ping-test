@@ -42,24 +42,26 @@ def verificar_sesc():
         Select(adultos).select_by_value("2")
         time.sleep(2)
 
-        # 4. Regime de Pensão (usando o ID fornecido: regime-pensao)
+       # 4. Regime de Pensão (usando o ID fornecido: regime-pensao)
         pensao = driver.find_element(By.ID, "regime-pensao")
         Select(pensao).select_by_visible_text("Pensão Completa")
         time.sleep(2)
 
-        # Clica no botão BUSCAR forçando via JS
-        btn_buscar = driver.find_element(By.XPATH, "//*[contains(text(), 'BUSCAR') or contains(text(), 'Buscar')]")
+        # Clica no botão BUSCAR usando o ID exato: search-submit
+        btn_buscar = driver.find_element(By.ID, "search-submit")
         driver.execute_script("arguments[0].click();", btn_buscar)
         
         time.sleep(10) # Espera 10 segundos pela página de resultados
 
         # 5. Análise do Resultado
         pagina = driver.find_element(By.TAG_NAME, "body").text.lower()
-        if "esgotado" not in pagina and "não há disponibilidade" not in pagina:
+        
+        # Verifica se a frase exata da faixa amarela está na página
+        if "não existe disponibilidade" in pagina:
+            print("Sem vagas no momento. O robô continuará vigiando.")
+        else:
             notificar_guilherme("🚨 VAGA ENCONTRADA NO SESC CALDAS NOVAS!\n📅 31/12/26 a 03/01/27\n🛏️ 1 Quarto p/ 2 Adultos (Pensão Completa)\n🏃‍♂️ Corra para o site e reserve!")
             print("Mensagem enviada com sucesso!")
-        else:
-            print("Sem vagas no momento. O robô continuará vigiando.")
 
     except Exception as e:
         print(f"Erro detalhado ao navegar: {e}")
