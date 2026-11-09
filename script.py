@@ -62,21 +62,23 @@ def verificar_sesc():
         # 5. Análise do Resultado
         pagina = driver.find_element(By.TAG_NAME, "body").text.lower()
         
-        # Frase exata das Imagens 1 e 2 que confirma que NÃO HÁ vaga no período consultado
+        # Frase exata que confirma INDISPONIBILIDADE no período consultado
         texto_sem_disponibilidade = "não existe disponibilidade para o período consultado"
         
-        # Elementos das Imagens 3, 4 e 5 que confirmam a vaga REAL para o período
-        tem_quarto_disponivel = ("selecionar" in pagina or "reservar" in pagina or "quarto 01" in pagina)
+        # Termos que confirmam a vaga REAL (cobre 1 quarto ou vários quartos)
+        tem_quarto_disponivel = (
+            "selecionar" in pagina or 
+            "selecionado" in pagina or 
+            "reservar" in pagina or 
+            "quarto 01" in pagina
+        )
 
         if texto_sem_disponibilidade in pagina:
-            # Captura tanto a tela simples (Imagem 1) quanto a tela com datas próximas (Imagem 2)
             print("Sem vagas no momento para o período consultado. O robô continuará vigiando.")
         elif tem_quarto_disponivel:
-            # Só dispara se NÃO houver a frase de indisponibilidade E houver botão/quarto na tela
             notificar_guilherme("🚨 VAGA ENCONTRADA!\n📅 31/12/26 a 03/01/27\n🛏️ 1 Quarto p/ 2 Adultos\n🏃‍♂️ Corra para o site e reserve!")
             print("Mensagem enviada com sucesso!")
         else:
-            # Caso a página falhe ao carregar ou o site caia
             print("Aviso: A página não carregou os resultados esperados. Nenhuma notificação enviada.")
 
     except Exception as e:
