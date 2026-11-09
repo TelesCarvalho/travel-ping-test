@@ -39,7 +39,7 @@ def verificar_sesc():
         driver.execute_script("arguments[0].value = '';", campo_data)
         campo_data.send_keys(Keys.CONTROL + "a")
         campo_data.send_keys(Keys.BACKSPACE)
-        campo_data.send_keys("27/12/2026 - 28/12/2026")
+        campo_data.send_keys("31/12/2026 - 03/01/2027")
         campo_data.send_keys(Keys.TAB)
         time.sleep(1)
 
@@ -76,7 +76,7 @@ def verificar_sesc():
         if texto_sem_disponibilidade in pagina:
             print("Sem vagas no momento para o período consultado. O robô continuará vigiando.")
         elif tem_quarto_disponivel:
-            notificar_guilherme("🚨 VAGA ENCONTRADA!\n📅 27/12/26 a 28/12/26\n🛏️ 1 Quarto p/ 2 Adultos\n🏃‍♂️ Corra para o site e reserve!")
+            notificar_guilherme("🚨 VAGA ENCONTRADA!\n📅 31/12/26 a 03/01/27\n🛏️ 1 Quarto p/ 2 Adultos\n🏃‍♂️ Corra para o site e reserve!")
             print("Mensagem enviada com sucesso!")
         else:
             print("Aviso: A página não carregou os resultados esperados. Nenhuma notificação enviada.")
