@@ -3,8 +3,6 @@ name: Travel Ping Test
 on:
   workflow_dispatch:
   repository_dispatch:
-  schedule:
-    - cron: '*/5 * * * *'
 
 jobs:
   buscar:
