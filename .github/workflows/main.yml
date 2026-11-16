@@ -2,6 +2,9 @@ name: Travel Ping Test
 
 on:
   workflow_dispatch:
+  repository_dispatch:
+  schedule:
+    - cron: '*/5 * * * *'
 
 jobs:
   buscar:
@@ -22,4 +25,7 @@ jobs:
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          SESC_CPF: ${{ secrets.SESC_CPF }}
+          SESC_SENHA: ${{ secrets.SESC_SENHA }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: python script.py
