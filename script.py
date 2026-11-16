@@ -16,8 +16,8 @@ SESC_SENHA = os.environ.get("SESC_SENHA")
 GITHUB_TOKEN = os.environ.get("GH_TOKEN")
 GITHUB_REPOSITORY = os.environ.get("GITHUB_REPOSITORY")
 
-PERIODO_BUSCA = "31/12/2026 - 03/01/2027"
-PERIODO_TEXTO = "31/12/2026 a 03/01/2027"
+PERIODO_BUSCA = "20/12/2026 - 21/12/2026"
+PERIODO_TEXTO = "20/12/2026 a 21/12/2026"
 
 
 def enviar_telegram(mensagem):
@@ -185,8 +185,8 @@ try:
         enviar_telegram(
             f"🚨 *VAGA ENCONTRADA PARA 5 ADULTOS!*\n📅 Período: {PERIODO_TEXTO}\n🤖 *Prendendo o quarto no CPF...*"
         )
-        if reservar_e_logar(driver, wait, qtd_adultos=5, numero_quarto=1):
-            reservas_garantidas += 1
+        #if reservar_e_logar(driver, wait, qtd_adultos=5, numero_quarto=1):
+            #reservas_garantidas += 1
 
     # TENTATIVA 2: Se não achou para 5 adultos, tenta até 2 quartos para 3 adultos
     else:
@@ -196,8 +196,8 @@ try:
                     f"🚨 *VAGA ENCONTRADA PARA 3 ADULTOS (Quarto {tentativa}/2)!*\n"
                     f"📅 Período: {PERIODO_TEXTO}\n🤖 *Prendendo o quarto no CPF...*"
                 )
-                if reservar_e_logar(driver, wait, qtd_adultos=3, numero_quarto=tentativa):
-                    reservas_garantidas += 1
+                #if reservar_e_logar(driver, wait, qtd_adultos=3, numero_quarto=tentativa):
+                    #reservas_garantidas += 1
             else:
                 break
 
@@ -206,7 +206,7 @@ try:
             f"✅ *PROCESSO CONCLUÍDO ({reservas_garantidas} quarto(s) retido(s))!*\n"
             f"🔒 O robô foi *DESATIVADO* automaticamente. Finalizem o cadastro dos adultos e o pagamento no portal do Sesc!"
         )
-        desativar_workflow_github()
+        #desativar_workflow_github()
 
 finally:
     driver.quit()
