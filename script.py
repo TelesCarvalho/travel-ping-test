@@ -21,13 +21,20 @@ PERIODO_TEXTO = "20/12/2026 a 21/12/2026"
 
 
 def enviar_telegram(mensagem):
-    if TELEGRAM_TOKEN and TELEGRAM_CHAT_ID:
-        url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
-        payload = {"chat_id": TELEGRAM_CHAT_ID, "text": mensagem, "parse_mode": "Markdown"}
-        try:
-            requests.post(url, data=payload, timeout=10)
-        except Exception as e:
-            print(f"Erro ao enviar mensagem no Telegram: {e}")
+    if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
+        print("⚠️ Erro: TELEGRAM_TOKEN ou TELEGRAM_CHAT_ID está vazio nos Secrets!")
+        return
+
+    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+    payload = {"chat_id": TELEGRAM_CHAT_ID, "text": mensagem, "parse_mode": "Markdown"}
+    try:
+        res = requests.post(url, data=payload, timeout=10)
+        if res.status_code == 200:
+            print("📩 Mensagem enviada com sucesso no Telegram!")
+        else:
+            print(f"❌ Telegram recusou a mensagem ({res.status_code}): {res.text}")
+    except Exception as e:
+        print(f"Erro de conexão ao enviar mensagem no Telegram: {e}")
 
 
 def enviar_foto_telegram(caminho_foto, legenda):
