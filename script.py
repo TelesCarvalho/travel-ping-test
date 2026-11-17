@@ -53,18 +53,30 @@ def enviar_foto_telegram(caminho_foto, legenda):
 
 
 def desativar_workflow_github():
-    """Desativa o workflow main.yml no GitHub Actions após reter a(s) reserva(s)."""
-    if GITHUB_TOKEN and GITHUB_REPOSITORY:
-        url = f"https://api.github.com/repos/{GITHUB_REPOSITORY}/actions/workflows/main.yml/disable"
-        headers = {
-            "Authorization": f"Bearer {GITHUB_TOKEN}",
-            "Accept": "application/vnd.github.v3+json"
-        }
-        res = requests.put(url, headers=headers)
+    """Desativa o workflow main.yml no GitHub Actions e retorna (sucesso, detalhe_erro)."""
+    if not GITHUB_TOKEN or not GITHUB_REPOSITORY:
+        motivo = "GH_TOKEN ou GITHUB_REPOSITORY não configurado."
+        print(f"⚠️ {motivo}")
+        return False, motivo
+
+    url = f"https://api.github.com/repos/{GITHUB_REPOSITORY}/actions/workflows/main.yml/disable"
+    headers = {
+        "Authorization": f"Bearer {GITHUB_TOKEN}",
+        "Accept": "application/vnd.github.v3+json"
+    }
+    try:
+        res = requests.put(url, headers=headers, timeout=10)
         if res.status_code == 204:
             print("🔒 Workflow main.yml desativado com sucesso!")
+            return True, ""
         else:
-            print(f"Erro ao tentar desativar workflow: {res.status_code} - {res.text}")
+            motivo = f"HTTP {res.status_code}: {res.text}"
+            print(f"❌ Erro ao tentar desativar workflow: {motivo}")
+            return False, motivo
+    except Exception as e:
+        motivo = f"{type(e).__name__}: {e}"
+        print(f"❌ Exceção ao tentar desativar workflow: {motivo}")
+        return False, motivo
 
 
 def tem_botao_reservar_visivel(driver):
@@ -209,11 +221,18 @@ try:
                 break
 
     if reservas_garantidas > 0:
-        enviar_telegram(
-            f"✅ *PROCESSO CONCLUÍDO ({reservas_garantidas} quarto(s) retido(s))!*\n"
-            f"🔒 O robô foi *DESATIVADO* automaticamente. Finalizem o cadastro dos adultos e o pagamento no portal do Sesc!"
-        )
-        desativar_workflow_github()
+        desativou, erro_desativar = desativar_workflow_github()
+        if desativou:
+            enviar_telegram(
+                f"✅ *PROCESSO CONCLUÍDO ({reservas_garantidas} quarto(s) retido(s))!*\n"
+                f"🔒 O robô foi *DESATIVADO* automaticamente. Finalizem o cadastro dos adultos e o pagamento no portal do Sesc!"
+            )
+        else:
+            enviar_telegram(
+                f"✅ *QUARTO(S) RETIDO(S) ({reservas_garantidas}), MAS FALHOU AO DESLIGAR O ROBÔ!*\n"
+                f"⚠️ *Motivo:* `{erro_desativar}`\n\n"
+                f"🛑 *AÇÃO URGENTE:* Desativem o workflow manualmente no GitHub Actions ou pausem o `cron-job.org` agora para o robô não rodar de novo em 5 minutos!"
+            )
 
 finally:
     driver.quit()
